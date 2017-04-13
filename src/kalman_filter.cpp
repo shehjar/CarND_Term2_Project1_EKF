@@ -35,9 +35,10 @@ void KalmanFilter::Update(const VectorXd &z) {
   // The general Kalman filter update equations are computed below
   MatrixXd y = z - H_*x_;
   MatrixXd Ht = H_.transpose();
-  MatrixXd S = H_*P_*Ht + R_;
+  MatrixXd P_Ht = P_*Ht;
+  MatrixXd S = H_*P_Ht + R_;
   MatrixXd Si = S.inverse();
-  MatrixXd K = P_*Ht*Si;
+  MatrixXd K = P_Ht*Si;
   x_ += K*y;
   P_ = (MatrixXd::Identity(4,4) - K*H_)*P_;
 }
@@ -54,18 +55,21 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   double vx = x_(2);
   double vy = x_(3);
   VectorXd H_fun = VectorXd(3);
-  H_fun<< sqrt(pow(px,2) + pow(py,2)),
+  double dist = sqrt(pow(px,2) + pow(py,2));
+  H_fun<< dist,
           atan2(py,px),
-          (px*vx + py*vy)/sqrt(pow(px,2) + pow(py,2));
+          (px*vx + py*vy)/dist;
+  //VectorXd H_fun = H_*x_;
   VectorXd y = z - H_fun;
   // Using atan2 to get the correct difference in angles
   double dphi = atan2(sin(z(1)),cos(z(1))) - atan2(sin(H_fun(1)),cos(H_fun(1)));
   y(1) = dphi;
   // rest of the prediction steps
   MatrixXd Ht = H_.transpose();
-  MatrixXd S = H_*P_*Ht + R_;
+  MatrixXd P_Ht = P_*Ht;
+  MatrixXd S = H_*P_Ht + R_;
   MatrixXd Si = S.inverse();
-  MatrixXd K = P_*Ht*S.inverse();
+  MatrixXd K = P_Ht*Si;
   x_ += K*y;
   P_ = (MatrixXd::Identity(4,4) - K*H_)*P_;
 }

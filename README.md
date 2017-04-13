@@ -1,5 +1,5 @@
-# Extended Kalman Filter Project Starter Code
-Self-Driving Car Engineer Nanodegree Program
+# Extended Kalman Filter Project Completed Code
+For Self-Driving Car Engineer Nanodegree Program - This is a C++ implementation of the Extended Kalman Filter.
 
 ---
 
@@ -18,9 +18,9 @@ Self-Driving Car Engineer Nanodegree Program
 
 ## Basic Build Instructions
 
-1. Clone this repo.
+1. Clone or download this repo.
 2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make` 
+3. Compile: `cmake .. && make`
    * On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
 4. Run it: `./ExtendedKF path/to/input.txt path/to/output.txt`. You can find
    some sample inputs in 'data/'.
@@ -28,58 +28,58 @@ Self-Driving Car Engineer Nanodegree Program
 
 ## Editor Settings
 
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
+Having used Code::Blocks as IDE for this particular project, the following editor settings are recommended:
 
 * indent using spaces
 * set tab width to 2 spaces (keeps the matrices in source code aligned)
 
 ## Code Style
 
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
+I have tried my best to stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html). In case of any discrepancies found, please let me know and I will edit them right away!
 
 ## Generating Additional Data
 
-This is optional!
-
-If you'd like to generate your own radar and lidar data, see the
-[utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for
+For the ones who have a Matlab license, please feel free to generate your own radar and lidar data- see the [utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for
 Matlab scripts that can generate additional data.
 
-## Project Instructions and Rubric
+## Project Rubrics
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
+### Compiling
 
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/12dd29d8-2755-4b1b-8e03-e8f16796bea8)
-for instructions and the project rubric.
+##### The Code Should be simple to compile.
 
-## Hints!
+Given that the file `CMakeLists.txt` contains all the information for cmake build, it shouldn't take much effort in compiling the files. I had a windows OS which did not respond to my make software installation. Therefore I used Code::Blocks to execute my C++ programs. The output file is saved within the `CarND_Term2_Project1_EKF` folder as `output.txt`.
 
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
+### Accuracy
 
-## Call for IDE Profiles Pull Requests
+##### The px, py, vx, vy output coordinates have an RMSE <= [0.08, 0.08, 0.60, 0.60] when using the file: "sample-laser-radar-measurement-data-1.txt".
 
-Help your fellow students!
+Upon running the code, the root mean square error (RMSE) of the Kalman estimate values with respect to the ground truth values were found to be as `[0.0651663, 0.0605391, 0.530409, 0.544205]`.
 
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
+##### The px, py, vx, vy output coordinates have an RMSE <= [0.20, 0.20, .50, .85] when using the file: "sample-laser-radar-measurement-data-2.txt".
 
-However! We'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
+Upon running the code, the root mean square error (RMSE) of the Kalman estimate values with respect to the ground truth values were found to be as `[0.0651663, 0.0605391, 0.530409, 0.544205]`.
 
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
+### Follows the Correct Algorithm
 
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
+##### Your Sensor Fusion algorithm follows the general processing flow as taught in the preceding lessons.
 
-Regardless of the IDE used, every submitted project must
-still be compilable with cmake and make.
+The sensor fusion algorithm collates the data from LIDAR and RADAR sensors and processes them as per the time stamp of their inputs. The starter code provided to me collected and gathered the given sensor data and my code tried to process this information as per the time stamp in a sequential manner.
+
+##### Your Kalman Filter algorithm handles the first measurements appropriately.
+
+The starting part of the algorithm initializes the state variables as the first point from the measurement data, either from LIDAR or RADAR. This can be changed to something random too, but the Kalman filter algorithm will probably take a longer time to approach to the true value of the state.
+
+##### Your Kalman Filter algorithm first predicts then updates.
+
+The Kalman filter algorithm is designed in such a way that it first goes through the prediction step, which is coded as a part of a `Predict()` function in the `KalmanFilter` class. The algorithm follows from another class called `FusionEKF` which calls a `KalmanFilter` class and initializes its variables to zero. After the `Predict()` function, it either calls for an `Update()` function or an `UpdateEKF()` function for the measurement update.
+
+##### Your Kalman Filter can handle radar and lidar measurements.
+
+The updating functions within `FusionEKF` class are coded in such a way that differentiates between LIDAR and RADAR measurement data. The computations for both are different, since LIDAR gives an update in Cartesian coordinates and RADAR gives an update in Polar coordinates.   
+
+### Code Efficiency
+
+##### Your algorithm should avoid unnecessary calculations.
+
+The C++ codes are optimized in such a way that no two computations are repeated. In case one finds an area of opportunity for optimization, please let me know and I would like to make the necessary changes.
